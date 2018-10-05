@@ -15,6 +15,8 @@ public class metrics {
       if (args[0].contains("l")) arguements += "l";
       if (args[0].contains("c")) arguements += "c";
       if (args[0].contains("w")) arguements += "w";
+      if (args[0].contains("s")) arguements += "s";
+      if (args[0].contains("m")) arguements += "m";
     } else {
       arguements = "lcw";
     }
@@ -27,9 +29,53 @@ public class metrics {
         System.out.println("Directory " + listOfFiles[i].getName());
       }
     }
-    fileRead(listOfFiles, arguements);
-  }
+    File[] codingLanguages = new File[listOfFiles.length];
 
+    System.out.println(codingLanguages[1]);
+    languageSort(listOfFiles, codingLanguages);
+    if (arguements.contains("l") || arguements.contains("c") || arguements.contains("w")) {
+      fileRead(listOfFiles, arguements);
+    } else if (arguements.contains("s") || arguements.contains("m")){
+      programFileRead(codingLanguages, arguements);
+    }
+
+  }
+  public static void programFileRead (File codingLanguages[], String arguements){
+    int fileCount = 0;
+    int i =0;
+    while (codingLanguages[i] != null){
+      i++;
+    }
+    System.out.println(i);
+    while (fileCount <= (i-1)){
+      System.out.println("inloop?");
+      try (BufferedReader files = new BufferedReader (new FileReader(codingLanguages[fileCount]))){
+        int numOfComments = 0;
+        int numLOC = 0;
+        int numOfLines = 0;
+        String line = files.readLine();
+        System.out.println(line);
+        while (line !=null ){
+          line = files.readLine();
+          numOfLines++;
+          if (line.contains("//")){
+            numOfComments ++;
+          } else numLOC ++;
+        }
+        System.out.println(codingLanguages[fileCount]);
+        if (arguements.equals("s")) {
+          System.out.println(numLOC);
+        } else if (arguements.equals("m")){
+          System.out.println(numOfComments);
+        }
+        fileCount ++;
+      }
+      catch(Exception e){
+              System.out.println("Please enter a valid directory or file");
+              System.exit(0);
+      }
+    }
+  }
   public static void fileRead (File listOfFiles[], String arguements) {
     int fileCount = 0;
     while ( fileCount < ((listOfFiles.length))) {
@@ -57,7 +103,8 @@ public class metrics {
         }
       }
       catch(Exception e){
-                System.out.println("Please enter a valid directory or file");   //tells user to enter correct directory or file
+                System.out.println("Please enter a valid directory or file");
+                System.exit(0);
       }
     }
   }
@@ -70,4 +117,18 @@ public class metrics {
     System.out.println("Please rerun program with the following format");
   }
 
+  public static void languageSort (File listOfFiles[], File codingLanguages[]){
+    int numOfProgramingFiles = 0;
+    for (int i = 0; i < listOfFiles.length; i++){
+      String temp = listOfFiles[i].getName();
+      if (temp.endsWith("java") ||
+          temp.endsWith("c") ||
+          temp.endsWith("h") ||
+          temp.endsWith("cpp")||
+          temp.endsWith("hpp")) {
+        codingLanguages[numOfProgramingFiles] = listOfFiles[i];
+        numOfProgramingFiles ++;
+      }
+    }
+  }
 }
